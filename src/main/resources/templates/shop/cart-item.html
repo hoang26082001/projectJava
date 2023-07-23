@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{/layout/layout :: main-fragment(
+                                                                     ~{:: title},
+                                                                    'header',
+                                                                    'footer',
+                                                                     ~{:: #css-resources},
+                                                                     ~{:: #js-resources},
+                                                                     ~{:: #main-content}
+                                                                    )}">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Giỏ Hàng</title>
+    <th:block id="css-resources">
+        <link rel="stylesheet" th:href="@{/shop/css/custom.css}">
+    </th:block>
+</head>
+<body>
+<main class="main" id="main-content">
+    <div class="container">
+        <h2>Danh sách sản phẩm đã thêm vào giỏ hàng</h2>
+        <div class="rows">
+            <div class="col-sm-9">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Ảnh sản phẩm</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá tạm tính</th>
+                        <th>Size</th>
+                        <th>Số lượng</th>
+                        <th>Giá</th>
+                        <th></th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${#session.getAttribute('CART_ITEMS')}">
+                        <form th:action="@{/shopping-cart/update}" method="post">
+                            <input type="hidden" name="id" th:value="${item.productId}" />
+
+                            <td class="small-image"><img th:src="@{${item.image}}"/></td>
+                            <td th:text="${item.name}"></td>
+                            <td th:text="${item.price}"></td>
+                            <td th:text="${item.size}"></td>
+                            <td th:text="${item.qty}"></td>
+                            <td th:text="${item.price * item.qty}"></td>
+                            <td>
+                                <a class="btn btn-primary btn-sm"
+                                   th:href="@{/shopping-cart/del/{productId}/{size}(productId=${item.productId}, size=${item.size})}">
+
+                                    Remove
+                                </a>
+                            </td>
+                        </form>
+                    </tr>
+                    </tbody>
+                </table>
+                <p><h4>Tổng Tiền: </h4><span th:text="${#session.getAttribute('TOTAL')}"></span></p>
+                <hr />
+                <a class="btn btn-primary btn-sm" th:href="@{/shopping-cart/clear}">Clear Cart</a>
+                <a class="btn btn-primary btn-sm" th:href="@{/san-pham}">Add more</a>
+                <a class="btn btn-primary btn-sm" th:href="@{/shopping-cart/payment-cart}">Tiến hành đặt hàng</a>
+            </div>
+        </div>
+    </div>
+</main><!-- End .main -->
+<th:block id="js-resources">
+
+</th:block>
+</body>
+</html>
